@@ -17,7 +17,7 @@ const int pos_pass = 150;
 const int pos_server = 300;
 const int pos_IDdevice = 450;
 ////
-String name_wifi = "AgriTour";
+String name_wifi = "BUBUCHACHA";
 String ssid_pass;
 
 
@@ -71,7 +71,7 @@ void set_ssid(){
   String  ssid_ = server.arg("plain");
   save(pos_ssid,ssid_);
   delay(200);
-  server.send(200, "text/plain", "ok! "+ser_ip ); 
+  server.send(200, "text/plain", "ok! "+server_ip ); 
 }
 void set_password(){
   String pas_ = server.arg("plain");
@@ -87,17 +87,17 @@ void set_password(){
   {
     Serial.print("Connected to WiFi network with IP Address: ");
     Serial.println(WiFi.localIP());
-    server.send(200, "text/plain", "ok! "+ser_ip ); 
+    server.send(200, "text/plain", "ok! "+server_ip ); 
   }
   else
   {
-    server.send(200, "text/plain", "not_connected" + ser_ip);
+    server.send(200, "text/plain", "not_connected" + server_ip);
   }
 }
 void set_server()
 {
   String ser_ip = server.arg("plain");
-  Serial.println(ser_ip);
+  Serial.println(server_ip);
   save(pos_server, ser_ip);
   delay(200);
   read(pos_server);
@@ -107,12 +107,12 @@ void set_server()
 void set_IDdevice()
 {
   String ser_ip = server.arg("plain");
-  Serial.println(ser_ip);
+  Serial.println(server_ip);
   save(pos_IDdevice, ser_ip);
   delay(200);
   read(pos_IDdevice);
   delay(200);
-  server.send(200, "text/plain", "ok! "+ser_ip ); 
+  server.send(200, "text/plain", "ok! "+server_ip ); 
 }
 void save(int start_position, String str){
   EEPROM.begin(512);
@@ -187,12 +187,13 @@ void loop() {
     WiFiClient client;
     HTTPClient https;
     String post_data = server_ip+"/data";
+
     https.begin(client, post_data);
     myObject["ssid"] = ssid;
     myObject["password"] = password;
     myObject["id_device"] = IDdevice;
     myObject["server_ip"] = server_ip;
-
+    Serial.print(post_data);
     jsonString = JSON.stringify(myObject);
     Serial.print(jsonString);
     int httpCode = https.POST(jsonString);
